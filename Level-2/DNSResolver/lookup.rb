@@ -19,17 +19,12 @@ domain = get_command_line_argument
 dns_raw = File.readlines("zone")
 
 def parse_dns(dns_raw)
-  dns_raw.shift # get rid of the header line in the zone file
-  dns_raw.select! { |record| record.length > 1 } # making sure there are no blank lines
   records = {}
-  dns_raw.each do |record|
-    # unpacking the different columns
-    record_type, source, destination = record.split(", ").map { |data| data.strip }
-    records[source.to_sym] = {
-      :type => record_type,
-      :destination => destination,
-    }
-  end
+  dns_raw.
+    reject { |line| line.empty? }.
+    map { |line| line.strip.split(", ") }.
+    reject { |record| record.length < 3 }.
+    each { |record| records[record[1].to_sym] = { :type => record[0], :destination => record[2] } }
   return records
 end
 
