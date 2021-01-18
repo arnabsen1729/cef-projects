@@ -6,7 +6,7 @@ connect_db!
 # shouldn't be preferred in production
 
 # for production `if_not_exists: true`
-ActiveRecord::Migration.create_table(:todos, force: true) do |t|
+ActiveRecord::Migration.create_table(:todos, if_not_exists: true) do |t|
   t.column :todo_text, :text
   t.column :due_date, :date
   t.column :completed, :bool
